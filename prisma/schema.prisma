@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  telegramId    BigInt   @unique
+  username      String?
+  
+  // Simple freemium flag
+  isPremium     Boolean  @default(false)
+  premiumUntil  DateTime?
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  alerts        Alert[]
+  payments      Payment[]
+  
+  @@index([telegramId])
+}
+
+// Price alerts
+model Alert {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // What to watch
+  symbol      String   // e.g., "BTCUSDT"
+  
+  // Alert type: "TOUCH" or "CLOSING"
+  alertType   AlertType
+  
+  // Price and direction
+  targetPrice Decimal  @db.Decimal(20, 8)
+  direction   AlertDirection   // "UP" or "DOWN"
+  
+  // For closing-based alerts (optional)
+  timeframe   String?  // "5m", "15m", "1h", etc.
+  
+  // Status
+  isActive    Boolean  @default(true)
+  isTriggered Boolean  @default(false)
+  triggeredAt DateTime?
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([userId, isActive])
+  @@index([symbol, isActive])
+}
+
+model Payment {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  
+  amount         Int      // Amount in smallest unit (e.g., 150 Stars)
+  currency       String   // "XTR" (Stars) or "USDT"
+  providerId     String?  @unique// Telegram Payment Charge ID
+  tier           String   // 1m, 6m, 12m
+  status         String   // "PENDING", "COMPLETED", "FAILED"
+  
+  createdAt      DateTime @default(now())
+}
+
+
+enum AlertDirection {
+  UP
+  DOWN
+}
+
+enum AlertType {
+  TOUCH
+  CLOSING
+}

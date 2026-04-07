@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Environment variables - NEVER commit these
+.env
+.env.local
+.env.production
+
+# Compiled output
+dist/
+build/
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
+src/**/*.d.ts.map
+
+# Prisma generated
+src/generated/
+
+# Logs
+logs/
+*.log
+
+# PM2
+ecosystem.config.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+
+# Root level compiled files
+prisma.config.js
+prisma.config.js.map
+prisma.config.d.ts
+prisma.config.d.ts.map
+
+# Misc
+file_list.txt
+.vscode/
