@@ -40,3 +40,6 @@ prisma.config.d.ts.map
 # Misc
 file_list.txt
 .vscode/
+
+*Tmp.ts
+*Tmp.js
