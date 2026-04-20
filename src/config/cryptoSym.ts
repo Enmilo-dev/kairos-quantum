@@ -1,5 +1,6 @@
 import axios from "axios";
 import { logger } from "../utils/logger.js";
+import { cryptoMap } from "./cryptoList.js";
 
 export const validSymbol = new Set<string>();
 
@@ -36,5 +37,10 @@ export const fetchValidCryptoSymbols = async () => {
     }
   }
 
-  throw new Error(`Failed to fetch crypto symbols after ${MAX_FETCH_RETRIES} attempts`);
+  logger.warn(`Failed to fetch crypto symbols after ${MAX_FETCH_RETRIES} attempts. Falling back to hardcoded crypto list.`);
+  validSymbol.clear();
+  cryptoMap.forEach((symbol) => {
+    validSymbol.add(symbol.toUpperCase());
+  });
+  logger.info(`Loaded ${validSymbol.size} symbols from fallback list`);
 };
