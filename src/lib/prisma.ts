@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { logger } from "../utils/logger.js";
-import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from '../generated/prisma/client.js';
 
 const connectionString = process.env.DATABASE_URL;
@@ -8,19 +7,8 @@ const connectionString = process.env.DATABASE_URL;
 if (!connectionString || connectionString.trim() === '') {
   throw new Error('DATABASE_URL environment variable is not defined or empty.');
 }
-/*
-const postgresUrlPattern = /^postgresql:\/\/[a-zA-Z0-9_-]+:[^@]+@[a-zA-Z0-9.-]+:\d+\/[a-zA-Z0-9_-]+/;
-if (!postgresUrlPattern.test(connectionString)) {
-  throw new Error(
-    `Invalid DATABASE_URL format. Expected PostgreSQL connection string.\n` +
-    `Format: postgresql://username:password@host:port/database\n` +
-    `Got: ${connectionString.substring(0, 50)}`
-  );
-}
-*/
-const adapter = new PrismaPg({ connectionString });
+
 const prisma = new PrismaClient({
-  adapter,
   log: [
     { level: 'error', emit: 'event' },
     { level: 'warn', emit: 'event' },

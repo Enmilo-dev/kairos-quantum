@@ -68,7 +68,7 @@ async function verifyServicesHealth(): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  logger.info("Booting up CryptoAlertBot...");
+  logger.info("Booting up Kairos Quantum...");
 
   try {
     await redisConnectWithRetry();
