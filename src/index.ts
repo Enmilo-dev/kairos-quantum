@@ -73,10 +73,9 @@ async function main(): Promise<void> {
   try {
     await redisConnectWithRetry();
     
-    logger.info("Loading and validating crypto symbols in background...");
-    fetchValidCryptoSymbols().catch((error) => {
-      logger.warn("Background crypto symbol fetch encountered an error", { error });
-    });
+    logger.info("Loading and validating crypto symbols...");
+    await fetchValidCryptoSymbols();
+    logger.info("Crypto symbols loaded");
 
     logger.info("Syncing active alerts from database...");
     await AlertModel.activeAlertSync();
